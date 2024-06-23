@@ -19,10 +19,6 @@ class HDF5Dataset(torch.utils.data.Dataset):
         return self.dataset_len
 
     def __getitem__(self, index):
-        # if self.dataset is None:
-        #     self.dataset = h5py.File(self.file_path, 'r')[self.dataset_name]
-        # if self.label is None:
-        #     self.label = h5py.File(self.file_path, 'r')[self.label_name]
         if self.file is None:
             self.file = h5py.File(self.file_path, 'r')
 
@@ -32,10 +28,11 @@ class HDF5Dataset(torch.utils.data.Dataset):
             x_in = self.transform(x_in)
         return x_in, label_in
 
-    # def close(self):
-    #     if self.file is not None:
-    #         self.file.close()
-    #         self.file = None
-    #
-    # def __del__(self):
-    #     self.close()
+    def close(self):
+        if self.file is not None:
+            self.file.close()
+            self.file = None
+
+    def __del__(self):
+        self.close()
+
